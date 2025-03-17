@@ -1,0 +1,48 @@
+{
+	"name": "TelemetryDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "PdM_telemetrySmall1.txt",
+				"container": "predictivemaintenance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "datetime",
+				"type": "String"
+			},
+			{
+				"name": "machineID",
+				"type": "String"
+			},
+			{
+				"name": "volt",
+				"type": "String"
+			},
+			{
+				"name": "rotate",
+				"type": "String"
+			},
+			{
+				"name": "pressure",
+				"type": "String"
+			},
+			{
+				"name": "vibration",
+				"type": "String"
+			}
+		]
+	}
+}
