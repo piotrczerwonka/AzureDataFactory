@@ -13,20 +13,29 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "window1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
-				"          datetime as string,",
-				"          machineID as string,",
-				"          volt as string,",
-				"          rotate as string,",
-				"          pressure as string,",
-				"          vibration as string",
+				"          datetime as timestamp,",
+				"          machineID as integer,",
+				"          volt as double,",
+				"          rotate as double,",
+				"          pressure as double,",
+				"          vibration as double",
 				"     ),",
 				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     limit: 100,",
-				"     ignoreNoFilesFound: false) ~> Telemetry"
+				"     ignoreNoFilesFound: false) ~> Telemetry",
+				"Telemetry window(asc(datetime, true),",
+				"     rangeSpecified: true,",
+				"     startRowOffset: -3L,",
+				"     endRowOffset: 0L,",
+				"     mean_vold_3d = avg(volt)) ~> window1"
 			]
 		}
 	}
