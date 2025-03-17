@@ -30,6 +30,9 @@
 				},
 				{
 					"name": "Wyborkolumn"
+				},
+				{
+					"name": "window1"
 				}
 			],
 			"scriptLines": [
@@ -75,7 +78,16 @@
 				"          machineID = ErrorsToColumns@machineID",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Wyborkolumn"
+				"     skipDuplicateMapOutputs: true) ~> Wyborkolumn",
+				"Wyborkolumn window(asc(datetime, true),",
+				"     rangeSpecified: true,",
+				"     startRowOffset: -3L,",
+				"     endRowOffset: 0L,",
+				"     mean_rotate_3h = mean(rotate),",
+				"          mean_pressure_3h = mean(pressure),",
+				"          mean_vibration_3h = mean(vibration),",
+				"          mean_volt_3h = mean(volt),",
+				"          stddev_volt_3h = stddev(volt)) ~> window1"
 			]
 		}
 	}
