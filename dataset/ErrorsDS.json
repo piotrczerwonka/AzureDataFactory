@@ -1,0 +1,36 @@
+{
+	"name": "ErrorsDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "PdM_errors.csv",
+				"container": "predictivemaintenance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "datetime",
+				"type": "String"
+			},
+			{
+				"name": "machineID",
+				"type": "String"
+			},
+			{
+				"name": "errorID",
+				"type": "String"
+			}
+		]
+	}
+}

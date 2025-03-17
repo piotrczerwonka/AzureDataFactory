@@ -11,10 +11,21 @@
 					},
 					"name": "Telemetry",
 					"description": "plik danych telemetrii (maly)"
+				},
+				{
+					"dataset": {
+						"referenceName": "ErrorsDS",
+						"type": "DatasetReference"
+					},
+					"name": "Errors"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "ErrorsToColumns"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          datetime as timestamp,",
@@ -26,7 +37,21 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> Telemetry"
+				"     ignoreNoFilesFound: false) ~> Telemetry",
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as short,",
+				"          errorID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Errors",
+				"Errors pivot(groupBy(datetime,",
+				"          machineID),",
+				"     pivotBy(errorID),",
+				"     sumaWystapien = count(errorID),",
+				"     columnNaming: '$N_$V',",
+				"     lateral: false) ~> ErrorsToColumns"
 			]
 		}
 	}
