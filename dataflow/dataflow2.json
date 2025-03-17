@@ -24,6 +24,12 @@
 			"transformations": [
 				{
 					"name": "ErrorsToColumns"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "Wyborkolumn"
 				}
 			],
 			"scriptLines": [
@@ -51,7 +57,25 @@
 				"     pivotBy(errorID),",
 				"     sumaWystapien = count(errorID),",
 				"     columnNaming: '$N_$V',",
-				"     lateral: false) ~> ErrorsToColumns"
+				"     lateral: false) ~> ErrorsToColumns",
+				"Telemetry, ErrorsToColumns join(Telemetry@datetime == ErrorsToColumns@datetime",
+				"     && Telemetry@machineID == ErrorsToColumns@machineID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          datetime = Telemetry@datetime,",
+				"          machineID = Telemetry@machineID,",
+				"          volt,",
+				"          rotate,",
+				"          pressure,",
+				"          vibration,",
+				"          datetime = ErrorsToColumns@datetime,",
+				"          machineID = ErrorsToColumns@machineID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Wyborkolumn"
 			]
 		}
 	}
