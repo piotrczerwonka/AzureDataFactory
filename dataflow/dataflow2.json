@@ -32,7 +32,10 @@
 					"name": "Wyborkolumn"
 				},
 				{
-					"name": "window1"
+					"name": "window3h"
+				},
+				{
+					"name": "window24h"
 				}
 			],
 			"scriptLines": [
@@ -80,14 +83,20 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Wyborkolumn",
 				"Wyborkolumn window(asc(datetime, true),",
-				"     rangeSpecified: true,",
 				"     startRowOffset: -3L,",
 				"     endRowOffset: 0L,",
 				"     mean_rotate_3h = mean(rotate),",
 				"          mean_pressure_3h = mean(pressure),",
 				"          mean_vibration_3h = mean(vibration),",
 				"          mean_volt_3h = mean(volt),",
-				"          stddev_volt_3h = stddev(volt)) ~> window1"
+				"          stddev_volt_3h = stddev(volt),",
+				"     rangeSpecified: true) ~> window3h",
+				"window3h window(asc(datetime, true),",
+				"     rangeSpecified: true,",
+				"     startRowOffset: -24L,",
+				"     endRowOffset: 0L,",
+				"     mean_rotate_24h = mean(rotate),",
+				"          mean_volt_24h = mean(volt)) ~> window24h"
 			]
 		}
 	}
