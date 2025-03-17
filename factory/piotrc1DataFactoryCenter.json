@@ -1,0 +1,9 @@
+{
+	"name": "piotrc1DataFactoryCenter",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "222381d8-9a7c-49e4-abd9-59a2176bd977",
+		"tenantId": "63441aef-da0e-4397-bb7e-f9d4705e963b"
+	}
+}
