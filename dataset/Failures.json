@@ -9,7 +9,7 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "failures",
+			"schema": "dbo",
 			"table": "failures"
 		}
 	}
