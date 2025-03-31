@@ -1,0 +1,104 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "TelemetryDS",
+						"type": "DatasetReference"
+					},
+					"name": "Telemetry"
+				},
+				{
+					"dataset": {
+						"referenceName": "FailuresDS",
+						"type": "DatasetReference"
+					},
+					"name": "Failures"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Failures",
+						"type": "DatasetReference"
+					},
+					"name": "SQLSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "kolumnyDatetimeMachineid"
+				},
+				{
+					"name": "FailuresPivot"
+				},
+				{
+					"name": "LeftJoin"
+				},
+				{
+					"name": "KolumnyDatetime"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as short,",
+				"          volt as double,",
+				"          rotate as double,",
+				"          pressure as double,",
+				"          vibration as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Telemetry",
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as short,",
+				"          failure as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Failures",
+				"Telemetry select(mapColumn(",
+				"          datetime,",
+				"          machineID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> kolumnyDatetimeMachineid",
+				"Failures pivot(groupBy(datetime,",
+				"          machineID),",
+				"     pivotBy(failure),",
+				"     {} = count(failure),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> FailuresPivot",
+				"kolumnyDatetimeMachineid, FailuresPivot join(kolumnyDatetimeMachineid@datetime == FailuresPivot@datetime",
+				"     && kolumnyDatetimeMachineid@machineID == FailuresPivot@machineID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LeftJoin",
+				"LeftJoin select(mapColumn(",
+				"          datetime = kolumnyDatetimeMachineid@datetime,",
+				"          machineID = kolumnyDatetimeMachineid@machineID,",
+				"          datetime = FailuresPivot@datetime,",
+				"          machineID = FailuresPivot@machineID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> KolumnyDatetime",
+				"KolumnyDatetime sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SQLSink"
+			]
+		}
+	}
+}
