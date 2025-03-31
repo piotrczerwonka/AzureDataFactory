@@ -1,0 +1,111 @@
+{
+	"name": "failures_and_times2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "FailuresDS",
+						"type": "DatasetReference"
+					},
+					"name": "Failures"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "Telemetry"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "FailuresAndTimesSQL"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					},
+					"name": "FailuresSQL"
+				}
+			],
+			"transformations": [
+				{
+					"name": "KolumnyDatetimeMachineid"
+				},
+				{
+					"name": "LeftJoin"
+				},
+				{
+					"name": "KolumnyDatetimeMachineIDFailure"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as short,",
+				"          failure as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Failures",
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as short,",
+				"          volt as double,",
+				"          rotate as double,",
+				"          pressure as double,",
+				"          vibration as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Telemetry",
+				"Telemetry select(mapColumn(",
+				"          datetime,",
+				"          machineID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> KolumnyDatetimeMachineid",
+				"KolumnyDatetimeMachineid, Failures join(KolumnyDatetimeMachineid@datetime == Failures@datetime",
+				"     && KolumnyDatetimeMachineid@machineID == Failures@machineID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LeftJoin",
+				"LeftJoin select(mapColumn(",
+				"          datetime = KolumnyDatetimeMachineid@datetime,",
+				"          machineID = KolumnyDatetimeMachineid@machineID,",
+				"          failure",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> KolumnyDatetimeMachineIDFailure",
+				"Failures sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> FailuresAndTimesSQL",
+				"KolumnyDatetimeMachineIDFailure sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> FailuresSQL"
+			]
+		}
+	}
+}
