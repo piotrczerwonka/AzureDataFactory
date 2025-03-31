@@ -40,6 +40,17 @@
 				},
 				{
 					"name": "KolumnyDatetime"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "MapDrifted1",
+					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "MapDrifted2",
+					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
 			"scriptLines": [
@@ -74,20 +85,36 @@
 				"     {} = count(failure),",
 				"     columnNaming: '$N$V',",
 				"     lateral: true) ~> FailuresPivot",
-				"kolumnyDatetimeMachineid, FailuresPivot join(kolumnyDatetimeMachineid@datetime == FailuresPivot@datetime",
+				"kolumnyDatetimeMachineid, MapDrifted1 join(kolumnyDatetimeMachineid@datetime == FailuresPivot@datetime",
 				"     && kolumnyDatetimeMachineid@machineID == FailuresPivot@machineID,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> LeftJoin",
-				"LeftJoin select(mapColumn(",
+				"MapDrifted2 select(mapColumn(",
 				"          datetime = kolumnyDatetimeMachineid@datetime,",
 				"          machineID = kolumnyDatetimeMachineid@machineID,",
-				"          datetime = FailuresPivot@datetime,",
-				"          machineID = FailuresPivot@machineID",
+				"          comp1,",
+				"          comp2,",
+				"          comp3,",
+				"          comp4",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> KolumnyDatetime",
+				"MapDrifted1 select(mapColumn(",
+				"          datetime,",
+				"          machineID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"FailuresPivot derive(comp1 = toLong(byName('comp1')),",
+				"          comp2 = toLong(byName('comp2')),",
+				"          comp3 = toLong(byName('comp3')),",
+				"          comp4 = toLong(byName('comp4'))) ~> MapDrifted1",
+				"LeftJoin derive(comp1 = toLong(byName('comp1')),",
+				"          comp2 = toLong(byName('comp2')),",
+				"          comp3 = toLong(byName('comp3')),",
+				"          comp4 = toLong(byName('comp4'))) ~> MapDrifted2",
 				"KolumnyDatetime sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -97,7 +124,15 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SQLSink"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          datetime,",
+				"          machineID,",
+				"          comp1,",
+				"          comp2,",
+				"          comp3,",
+				"          comp4",
+				"     )) ~> SQLSink"
 			]
 		}
 	}
