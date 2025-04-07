@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PdM_telemetrySmall1.txt",
+				"fileName": "small.txt",
 				"container": "predictivemaintenance"
 			},
 			"columnDelimiter": ",",
