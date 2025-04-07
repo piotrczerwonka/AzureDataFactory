@@ -34,11 +34,7 @@
 					"name": "Machines"
 				}
 			],
-			"sinks": [
-				{
-					"name": "sink1"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "ErrorsToColumns"
@@ -187,11 +183,7 @@
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> MainJoinMachines",
-				"MainJoinMachines sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     broadcast: 'auto')~> MainJoinMachines"
 			]
 		}
 	}
