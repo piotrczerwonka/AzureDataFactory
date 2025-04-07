@@ -60,7 +60,7 @@
 					"name": "KolumnyDatetime"
 				},
 				{
-					"name": "MapDrifted1",
+					"name": "mpPivotedFailures",
 					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
@@ -96,7 +96,7 @@
 				"     {} = count(failure),",
 				"     columnNaming: '$N$V',",
 				"     lateral: true) ~> FailuresPivot",
-				"kolumnyDatetimeMachineid, MapDrifted1 join(kolumnyDatetimeMachineid@datetime == FailuresPivot@datetime",
+				"kolumnyDatetimeMachineid, mpPivotedFailures join(kolumnyDatetimeMachineid@datetime == FailuresPivot@datetime",
 				"     && kolumnyDatetimeMachineid@machineID == FailuresPivot@machineID,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
@@ -115,7 +115,7 @@
 				"FailuresPivot derive(comp1 = toLong(byName('comp1')),",
 				"          comp2 = toLong(byName('comp2')),",
 				"          comp3 = toLong(byName('comp3')),",
-				"          comp4 = toLong(byName('comp4'))) ~> MapDrifted1",
+				"          comp4 = toLong(byName('comp4'))) ~> mpPivotedFailures",
 				"KolumnyDatetime sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
