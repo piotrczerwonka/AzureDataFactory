@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "FeatureEng",
+				"name": "FailuresDelta",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
