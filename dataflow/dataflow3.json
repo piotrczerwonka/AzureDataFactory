@@ -37,6 +37,13 @@
 						"referenceName": "Blob1",
 						"type": "LinkedServiceReference"
 					}
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSQL",
+						"type": "DatasetReference"
+					},
+					"name": "SQLSinkDatetime2"
 				}
 			],
 			"transformations": [
@@ -130,7 +137,18 @@
 				"KolumnyDatetime sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DoPliku"
+				"     skipDuplicateMapOutputs: true) ~> DoPliku",
+				"KolumnyDatetime sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SQLSinkDatetime2"
 			]
 		}
 	}
