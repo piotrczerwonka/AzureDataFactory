@@ -1,0 +1,47 @@
+{
+	"name": "SQLFailureWithTimes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "datetime",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "machineid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "comp1ftime",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "comp2ftime",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "comp3ftime",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "comp4ftime",
+				"type": "float",
+				"precision": 15
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "FailureTimes"
+		}
+	}
+}

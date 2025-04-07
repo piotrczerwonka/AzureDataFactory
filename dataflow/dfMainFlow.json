@@ -21,10 +21,10 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "FailuresDS",
+						"referenceName": "SQLFailureWithTimes",
 						"type": "DatasetReference"
 					},
-					"name": "Failures"
+					"name": "FailureWithTimesView"
 				}
 			],
 			"sinks": [],
@@ -45,11 +45,14 @@
 					"name": "window24h"
 				},
 				{
-					"name": "FailuresToColumns"
-				},
-				{
 					"name": "mpPivotedErrors",
 					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "MainJoinFailures"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -74,12 +77,16 @@
 				"     ignoreNoFilesFound: false) ~> Errors",
 				"source(output(",
 				"          datetime as timestamp,",
-				"          machineID as short,",
-				"          failure as string",
+				"          machineid as integer,",
+				"          comp1ftime as double,",
+				"          comp2ftime as double,",
+				"          comp3ftime as double,",
+				"          comp4ftime as double",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> Failures",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> FailureWithTimesView",
 				"Errors pivot(groupBy(datetime,",
 				"          machineID),",
 				"     pivotBy(errorID),",
@@ -107,7 +114,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Wyborkolumn",
-				"Wyborkolumn window(asc(datetime, true),",
+				"select1 window(asc(Wyborkolumn@datetime, true),",
 				"     startRowOffset: -3L,",
 				"     endRowOffset: 0L,",
 				"     mean_rotate_3h = mean(rotate),",
@@ -116,23 +123,42 @@
 				"          mean_volt_3h = mean(volt),",
 				"          stddev_volt_3h = stddev(volt),",
 				"     rangeSpecified: true) ~> window3h",
-				"window3h window(asc(datetime, true),",
+				"window3h window(asc(Wyborkolumn@datetime, true),",
 				"     startRowOffset: -24L,",
 				"     endRowOffset: 0L,",
 				"     mean_rotate_24h = mean(rotate),",
 				"          mean_volt_24h = mean(volt),",
 				"     rangeSpecified: true) ~> window24h",
-				"Failures pivot(groupBy(datetime,",
-				"          machineID),",
-				"     pivotBy(failure),",
-				"     failures = count(failure),",
-				"     columnNaming: '$N$V',",
-				"     lateral: true) ~> FailuresToColumns",
 				"ErrorsToColumns derive(sumaWystapien_error1 = toLong(byName('sumaWystapien_error1')),",
 				"          sumaWystapien_error2 = toLong(byName('sumaWystapien_error2')),",
 				"          sumaWystapien_error3 = toLong(byName('sumaWystapien_error3')),",
 				"          sumaWystapien_error4 = toLong(byName('sumaWystapien_error4')),",
-				"          sumaWystapien_error5 = toLong(byName('sumaWystapien_error5'))) ~> mpPivotedErrors"
+				"          sumaWystapien_error5 = toLong(byName('sumaWystapien_error5'))) ~> mpPivotedErrors",
+				"Wyborkolumn, FailureWithTimesView join(Wyborkolumn@datetime == FailureWithTimesView@datetime",
+				"     && Wyborkolumn@machineID == FailureWithTimesView@machineid,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> MainJoinFailures",
+				"MainJoinFailures select(mapColumn(",
+				"          datetime = Wyborkolumn@datetime,",
+				"          machineID = Wyborkolumn@machineID,",
+				"          volt,",
+				"          rotate,",
+				"          pressure,",
+				"          vibration,",
+				"          sumaWystapien_error1,",
+				"          sumaWystapien_error2,",
+				"          sumaWystapien_error3,",
+				"          sumaWystapien_error4,",
+				"          sumaWystapien_error5,",
+				"          comp1ftime,",
+				"          comp2ftime,",
+				"          comp3ftime,",
+				"          comp4ftime",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
 			]
 		}
 	}
