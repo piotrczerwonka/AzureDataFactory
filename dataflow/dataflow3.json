@@ -26,6 +26,17 @@
 						"type": "DatasetReference"
 					},
 					"name": "SQLSink"
+				},
+				{
+					"dataset": {
+						"referenceName": "Output",
+						"type": "DatasetReference"
+					},
+					"name": "DoPliku",
+					"rejectedDataLinkedService": {
+						"referenceName": "Blob1",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
@@ -115,7 +126,11 @@
 				"          comp2,",
 				"          comp3,",
 				"          comp4",
-				"     )) ~> SQLSink"
+				"     )) ~> SQLSink",
+				"KolumnyDatetime sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DoPliku"
 			]
 		}
 	}
