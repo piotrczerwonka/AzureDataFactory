@@ -7,10 +7,42 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "datetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "machineid",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "comp1",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "comp2",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "comp3",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "comp4",
+				"type": "int",
+				"precision": 10
+			}
+		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "failures2"
+			"table": "failures"
 		}
 	}
 }
