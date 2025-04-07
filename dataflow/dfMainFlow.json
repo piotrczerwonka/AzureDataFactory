@@ -25,9 +25,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "FailureWithTimesView"
+				},
+				{
+					"dataset": {
+						"referenceName": "DSMachines",
+						"type": "DatasetReference"
+					},
+					"name": "Machines"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "ErrorsToColumns"
@@ -87,6 +98,14 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> FailureWithTimesView",
+				"source(output(",
+				"          machineID as short,",
+				"          model as string,",
+				"          age as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Machines",
 				"Errors pivot(groupBy(datetime,",
 				"          machineID),",
 				"     pivotBy(errorID),",
@@ -160,7 +179,11 @@
 				"          comp4ftime",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> WyborKolumn2"
+				"     skipDuplicateMapOutputs: true) ~> WyborKolumn2",
+				"window24h sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
