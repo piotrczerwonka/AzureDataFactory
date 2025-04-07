@@ -22,13 +22,6 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Failures",
-						"type": "DatasetReference"
-					},
-					"name": "SQLSink"
-				},
-				{
-					"dataset": {
 						"referenceName": "AzureSQL",
 						"type": "DatasetReference"
 					},
@@ -105,24 +98,6 @@
 				"          comp2 = toLong(byName('comp2')),",
 				"          comp3 = toLong(byName('comp3')),",
 				"          comp4 = toLong(byName('comp4'))) ~> mpPivotedFailures",
-				"KolumnyDatetime sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          datetime,",
-				"          machineID,",
-				"          comp1,",
-				"          comp2,",
-				"          comp3,",
-				"          comp4",
-				"     )) ~> SQLSink",
 				"KolumnyDatetime sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
