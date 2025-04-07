@@ -25,7 +25,7 @@
 						"referenceName": "AzureSQL",
 						"type": "DatasetReference"
 					},
-					"name": "SQLSinkDatetime2"
+					"name": "SQLSingFailureswithTime"
 				}
 			],
 			"transformations": [
@@ -124,7 +124,7 @@
 				"          comp2,",
 				"          comp3,",
 				"          comp4",
-				"     )) ~> SQLSinkDatetime2"
+				"     )) ~> SQLSingFailureswithTime"
 			]
 		}
 	}
