@@ -52,7 +52,7 @@
 					"name": "MainJoinFailures"
 				},
 				{
-					"name": "select1"
+					"name": "WyborKolumn2"
 				}
 			],
 			"scriptLines": [
@@ -114,7 +114,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> Wyborkolumn",
-				"select1 window(asc(Wyborkolumn@datetime, true),",
+				"WyborKolumn2 window(asc(datetime, true),",
 				"     startRowOffset: -3L,",
 				"     endRowOffset: 0L,",
 				"     mean_rotate_3h = mean(rotate),",
@@ -158,7 +158,7 @@
 				"          comp4ftime",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> WyborKolumn2"
 			]
 		}
 	}
