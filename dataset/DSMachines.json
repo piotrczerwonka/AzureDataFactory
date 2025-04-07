@@ -1,0 +1,23 @@
+{
+	"name": "DSMachines",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "PdM_machines.csv",
+				"container": "predictivemaintenance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
