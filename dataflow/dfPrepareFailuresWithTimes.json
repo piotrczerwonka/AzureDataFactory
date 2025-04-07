@@ -29,17 +29,6 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "Output",
-						"type": "DatasetReference"
-					},
-					"name": "DoPliku",
-					"rejectedDataLinkedService": {
-						"referenceName": "Blob1",
-						"type": "LinkedServiceReference"
-					}
-				},
-				{
-					"dataset": {
 						"referenceName": "AzureSQL",
 						"type": "DatasetReference"
 					},
@@ -134,10 +123,6 @@
 				"          comp3,",
 				"          comp4",
 				"     )) ~> SQLSink",
-				"KolumnyDatetime sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DoPliku",
 				"KolumnyDatetime sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
