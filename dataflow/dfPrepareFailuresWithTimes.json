@@ -98,8 +98,16 @@
 				"          comp2 = toLong(byName('comp2')),",
 				"          comp3 = toLong(byName('comp3')),",
 				"          comp4 = toLong(byName('comp4'))) ~> mpPivotedFailures",
-				"KolumnyDatetime sink(allowSchemaDrift: true,",
+				"KolumnyDatetime sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
+				"     input(",
+				"          datetime as timestamp,",
+				"          machineid as integer,",
+				"          comp1 as integer,",
+				"          comp2 as integer,",
+				"          comp3 as integer,",
+				"          comp4 as integer",
+				"     ),",
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
@@ -108,7 +116,15 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SQLSinkDatetime2"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          datetime,",
+				"          machineid = machineID,",
+				"          comp1,",
+				"          comp2,",
+				"          comp3,",
+				"          comp4",
+				"     )) ~> SQLSinkDatetime2"
 			]
 		}
 	}
