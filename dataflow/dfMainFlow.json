@@ -198,7 +198,7 @@
 				"     broadcast: 'auto')~> MainJoinMachines",
 				"MainJoinMachines sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['destinationAll.txt'],",
+				"     partitionFileNames:['destinationAll1.txt'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"
