@@ -64,6 +64,9 @@
 				},
 				{
 					"name": "WyborKolumn2"
+				},
+				{
+					"name": "MainJoinMachines"
 				}
 			],
 			"scriptLines": [
@@ -180,7 +183,12 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> WyborKolumn2",
-				"window24h sink(allowSchemaDrift: true,",
+				"window24h, Machines join(WyborKolumn2@machineID == Machines@machineID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> MainJoinMachines",
+				"MainJoinMachines sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> sink1"
